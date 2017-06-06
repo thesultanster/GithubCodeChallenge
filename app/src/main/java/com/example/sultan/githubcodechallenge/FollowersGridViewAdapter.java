@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sultan.githubcodechallenge.data_layer.Follower;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,6 +29,21 @@ public class FollowersGridViewAdapter extends BaseAdapter {
     public FollowersGridViewAdapter(Context context, List<Follower> data) {
         this.mContext = context;
         this.data = data;
+    }
+
+    void clearAdapter(){
+        data.clear();
+        notifyDataSetChanged();
+    }
+
+
+    void addCell(Follower follower){
+        if(data.contains(follower)){
+            return;
+        }
+
+        data.add(follower);
+        notifyDataSetChanged();
     }
 
     // returns count of grid children
@@ -62,19 +78,19 @@ public class FollowersGridViewAdapter extends BaseAdapter {
         }
 
         // Inflate View objects needed for the cell
-        final ImageView ivProfilePicture = (ImageView) convertView.findViewById(R.id.ivProfilePicture);
+        final CircleImageView ivProfilePicture = (CircleImageView) convertView.findViewById(R.id.ivProfilePicture);
         final TextView tvFollowerName = (TextView) convertView.findViewById(R.id.tvFollowerName);
 
         // BIIIIND THE DAATAAAAA
 
-        Picasso.with(mContext).load(follower.getUrl()).into(ivProfilePicture);
-        tvFollowerName.setText(follower.getName());
+        Picasso.with(mContext).load(follower.getAvatar_url()).into(ivProfilePicture);
+        tvFollowerName.setText(follower.getLogin());
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ProfileAcitivy.class);
-                intent.putExtra("profileUrl", follower.getProfileUrl());
+                intent.putExtra("profileUrl", follower.getUrl());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
